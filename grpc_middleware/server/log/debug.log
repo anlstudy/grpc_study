@@ -1,0 +1,2 @@
+{"level":"info","ts":"2021-02-04T16:26:16.525+0800","caller":"zap/server_interceptors.go:39","msg":"finished unary call with code OK","grpc.start_time":"2021-02-04T16:26:16+08:00","system":"grpc","span.kind":"server","grpc.service":"proto.Simple","grpc.method":"Route","grpc.code":"OK","grpc.time_ms":0}
+{"level":"warn","ts":"2021-02-04T16:38:52.576+0800","caller":"grpclog/grpclog.go:42","msg":"grpc: Server.Serve failed to complete security handshake from \"127.0.0.1:63190\": remote error: tls: bad certificate","system":"grpc","grpc_log":true}

@@ -1,0 +1,36 @@
+syntax = "proto3";// 协议为proto3
+
+package proto;
+
+message SimpleRequest{
+  string data = 1;
+}
+
+
+message SimpleResponse{
+  int32 code = 1;
+  string value = 2;
+}
+
+
+// 流式
+message StreamRequest{
+  // 请求参数
+  string data = 1;
+}
+
+message StreamResponse{
+  // 流式响应数据
+  string stream_value = 1;
+}
+
+
+service Simple{
+  rpc Route (SimpleRequest) returns (SimpleResponse){};
+  // 服务端流式rpc，在响应数据前添加stream
+  rpc ListValue(StreamRequest)returns(stream StreamResponse){};
+  // 客户端流式rpc, 在发送数据前添加stream
+  rpc RouteList(stream SimpleRequest) returns (SimpleResponse){};
+  // 双向流式rpc
+  rpc Conversations(stream StreamRequest) returns (stream StreamResponse){};
+}

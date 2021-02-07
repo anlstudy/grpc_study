@@ -1,9 +1,10 @@
-package main
+package server
 
 import (
 	"context"
-	"fmt"
 	pb "grpc_demo/proto"
+	"io"
+	"log"
 	"strconv"
 	"time"
 )
@@ -12,7 +13,6 @@ type SimpleService struct{}
 
 
 func (s *SimpleService) Route(ctx context.Context, req *pb.SimpleRequest) (*pb.SimpleResponse, error) {
-	fmt.Println(ctx)
 	res := pb.SimpleResponse{
 		Code:  200,
 		Value: "hello " + req.Data,
@@ -34,3 +34,39 @@ func (s *SimpleService) ListValue(req *pb.StreamRequest, srv pb.Simple_ListValue
 	return nil
 }
 
+func (s *SimpleService) RouteList(srv pb.Simple_RouteListServer) error {
+	for {
+		//从流中获取消息
+		res, err := srv.Recv()
+		if err == io.EOF {
+			//发送结果，并关闭
+			return srv.SendAndClose(&pb.SimpleResponse{Value: "ok"})
+		}
+		if err != nil {
+			return err
+		}
+		log.Println(res.Data)
+	}
+}
+
+
+func (s *SimpleService) Conversations(srv pb.Simple_ConversationsServer) error {
+	n := 1
+	for {
+		req, err := srv.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		err = srv.Send(&pb.StreamResponse{
+			StreamValue: "from stream server answer: the " + strconv.Itoa(n) + " question is " + req.Data,
+		})
+		if err != nil {
+			return err
+		}
+		n++
+		log.Printf("from stream client question: %s", req.Data)
+	}
+}

@@ -1,0 +1,4 @@
+### 环境安装 https://www.cnblogs.com/FireworksEasyCool/p/12669371.html
+
+### proto 编译
+protoc --go_out=plugins=grpc:./ ./demo.proto

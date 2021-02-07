@@ -1,1 +1,7 @@
-package grpc_study
+package main
+
+import "fmt"
+
+func main(){
+	fmt.Println("grpc trilver")
+}
